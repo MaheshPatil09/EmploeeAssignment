@@ -1,4 +1,5 @@
 ﻿using EmploeeAssignment.Common;
+using EmploeeAssignment.Dto;
 using Newtonsoft.Json;
 
 namespace EmploeeAssignment.Entities
@@ -34,5 +35,36 @@ namespace EmploeeAssignment.Entities
         [JsonProperty(PropertyName = "alternateMobile", NullValueHandling = NullValueHandling.Ignore)]
         public string AlternateMobile { get; set; }
 
+        [JsonProperty(PropertyName = "status", NullValueHandling = NullValueHandling.Ignore)]
+        public string Status { get; set; }
+
     }
+
+    public class StudentFilterCriteria
+    {
+
+        public StudentFilterCriteria() 
+        {
+            Filters = new List<FilterCriteria>();
+            Employees = new List<EmployeeBasDto>();
+        }
+        public int Page { get; set; }
+
+        public int PageSize { get; set; }
+
+        public int TotalCount { get; set; } 
+
+        public List<FilterCriteria> Filters {  get; set; }
+
+        public List<EmployeeBasDto> Employees { get; set; }
+
+    }
+
+    public class FilterCriteria
+    {
+         public string FieldName { get; set; }
+
+        public string FieldValue { get; set; }
+    }
+
 }

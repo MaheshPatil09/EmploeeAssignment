@@ -4,6 +4,7 @@ using EmploeeAssignment.Service;
 using Microsoft.Azure.Cosmos;
 using EmploeeAssignment.CosmosDb;
 using System.Net;
+using EmploeeAssignment.ServiceFilter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IEmployeeBas, EmployeeBas>();
 builder.Services.AddScoped<IIdentity, Identity>();
 builder.Services.AddScoped<IPersonal, Personal>();
 builder.Services.AddScoped<IWork, Work>();
+builder.Services.AddScoped<BuildEmployeeFilter>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

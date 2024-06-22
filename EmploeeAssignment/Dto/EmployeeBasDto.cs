@@ -35,5 +35,10 @@ namespace EmploeeAssignment.Dto
         public string AlternateEmail { get; set; }
         [JsonProperty(PropertyName = "alternateMobile", NullValueHandling = NullValueHandling.Ignore)]
         public string AlternateMobile { get; set; }
+
+        [JsonProperty(PropertyName = "status", NullValueHandling = NullValueHandling.Ignore)]
+        public string Status { get; set; }
+
+
     }
 }

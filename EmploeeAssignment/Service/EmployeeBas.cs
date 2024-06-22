@@ -4,6 +4,7 @@ using EmploeeAssignment.CosmosDb;
 using EmploeeAssignment.Dto;
 using EmploeeAssignment.Entities;
 using EmploeeAssignment.Interfaces;
+using Newtonsoft.Json;
 
 
 
@@ -68,6 +69,57 @@ namespace EmploeeAssignment.Service
             //var res = await _cismosService.AddEmployee(response);
             return "Deleted Successfully";
         }
+
+        public async Task<List<EmployeeBasDto>> GetAllEmployeeByRole(string Role)
+        {
+            var allEmployee = await GetAllEmployee();
+
+            return allEmployee.FindAll(x => x.Role == Role);
+            
+        }
+
+        public async Task<StudentFilterCriteria> GetAllEmployeeByPagination(StudentFilterCriteria studentFilterCriteria)
+        {
+
+            StudentFilterCriteria studentFilterCriteria1 = new StudentFilterCriteria();
+            var checkFilter = studentFilterCriteria.Filters.Any(a => a.FieldName == "role");
+            var role = "";
+            if (checkFilter)
+            {
+                role = studentFilterCriteria.Filters.Find(a => a.FieldName == "role").FieldValue;
+            }
+
+              var employees = await GetAllEmployee();
+            var filteredRecords = employees.FindAll(a =>  a.Role == role);
+           
+
+             studentFilterCriteria1.TotalCount = employees.Count;
+            studentFilterCriteria1.Page = studentFilterCriteria.Page;
+            studentFilterCriteria1.PageSize = studentFilterCriteria.PageSize;
+
+             var skip = studentFilterCriteria.PageSize * (studentFilterCriteria.Page - 1);
+             employees = employees.Skip(skip).Take(studentFilterCriteria.PageSize).ToList();
+            foreach (var employee in filteredRecords)
+            {
+                studentFilterCriteria1.Employees.Add(employee);
+            }
+            return studentFilterCriteria1;
+        }
+
+        public async Task<StudentModel> AddStudentByMakePostRequest(StudentModel studentModel)
+        {
+           var serializeObject = JsonConvert.SerializeObject(studentModel);
+            var requestObject = await HttpCommonHelper.MakePostRequest(Credentials.StudentUrl,Credentials.AddStudentEndPoint,serializeObject);
+            var responseObject = JsonConvert.DeserializeObject<StudentModel>(requestObject);
+            return responseObject;
+        }
+
+        public async Task<List<StudentModel>> GetStudentByMakeGetRequest()
+        {
+            var requestObj = await HttpCommonHelper.MakeGetRequest(Credentials.StudentUrl, Credentials.GetStudentEndPoint);
+            return JsonConvert.DeserializeObject<List<StudentModel>>(requestObj);   
+        }
+
 
     }
 }

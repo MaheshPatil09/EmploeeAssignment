@@ -1,6 +1,8 @@
 ﻿using EmploeeAssignment.Dto;
+using EmploeeAssignment.Entities;
 using EmploeeAssignment.Interfaces;
 using EmploeeAssignment.Service;
+using EmploeeAssignment.ServiceFilter;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -30,7 +32,9 @@ namespace EmploeeAssignment.Controllers
         [HttpPost]
 
         public async Task<EmployeeBasDto> AddEmployee(EmployeeBasDto employeeBasDto)
+
         {
+
             var response = await _employeeBas.AddEmployee(employeeBasDto);
             return response;
         }
@@ -270,6 +274,34 @@ namespace EmploeeAssignment.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
 
            }
+        }
+        [HttpGet]
+
+        public async Task<IActionResult> GetAllEmployeeByRole(string Role)
+        {
+            var response = await _employeeBas.GetAllEmployeeByRole(Role);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(BuildEmployeeFilter))]
+        public async Task<StudentFilterCriteria> GetAllEmployeeByPagination(StudentFilterCriteria studentFilterCriteria)
+        {
+            var response = await _employeeBas.GetAllEmployeeByPagination(studentFilterCriteria);
+            return response;
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> AddStudentByMakePostRequest(StudentModel studentModel)
+        {
+            var response = await _employeeBas.AddStudentByMakePostRequest(studentModel);
+            return Ok(response);
+        }
+        [HttpGet]
+        public async Task<List<StudentModel>> GetStudentByMakeGetRequest()
+        {
+            return await _employeeBas.GetStudentByMakeGetRequest();
         }
     }
 }
